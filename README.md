@@ -1,285 +1,166 @@
-<!-- [![pipeline status](https://gitlab.com/araffin/stable-baselines3/badges/master/pipeline.svg)](https://gitlab.com/araffin/stable-baselines3/-/commits/master) -->
-[![CI](https://github.com/DLR-RM/stable-baselines3/workflows/CI/badge.svg)](https://github.com/DLR-RM/stable-baselines3/actions/workflows/ci.yml)
-[![Documentation Status](https://readthedocs.org/projects/stable-baselines/badge/?version=master)](https://stable-baselines3.readthedocs.io/en/master/?badge=master) [![coverage report](https://gitlab.com/araffin/stable-baselines3/badges/master/coverage.svg)](https://github.com/DLR-RM/stable-baselines3/actions/workflows/ci.yml)
-[![codestyle](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+# PPO Training for RLKuavoGymEnv
 
+This directory contains scripts for training PPO policies on the `RLKuavoGymEnv` environment.
 
-# Stable Baselines3
+## Files Overview
 
-<img src="docs/\_static/img/logo.png" align="right" width="40%"/>
+- `rl_kuavo_gym_env.py` - Your custom Gymnasium environment for the Kuavo robot
+- `ppo_main.py` - Main PPO training script with comprehensive functionality
+- `run_ppo_training.py` - Simple script to run PPO training
+- `training_config.py` - Configuration file for easy parameter adjustment
+- `README.md` - This file
 
-Stable Baselines3 (SB3) is a set of reliable implementations of reinforcement learning algorithms in PyTorch. It is the next major version of [Stable Baselines](https://github.com/hill-a/stable-baselines).
+## Quick Start
 
-You can read a detailed presentation of Stable Baselines3 in the [v1.0 blog post](https://araffin.github.io/post/sb3/) or our [JMLR paper](https://jmlr.org/papers/volume22/20-1364/20-1364.pdf).
+### 1. Basic Training
 
+To start training immediately with default settings:
 
-These algorithms will make it easier for the research community and industry to replicate, refine, and identify new ideas, and will create good baselines to build projects on top of. We expect these tools will be used as a base around which new ideas can be added, and as a tool for comparing a new approach against existing ones. We also hope that the simplicity of these tools will allow beginners to experiment with a more advanced toolset, without being buried in implementation details.
-
-**Note: Despite its simplicity of use, Stable Baselines3 (SB3) assumes you have some knowledge about Reinforcement Learning (RL).** You should not utilize this library without some practice. To that extent, we provide good resources in the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/rl.html) to get started with RL.
-
-## Main Features
-
-**The performance of each algorithm was tested** (see *Results* section in their respective page),
-you can take a look at the issues [#48](https://github.com/DLR-RM/stable-baselines3/issues/48) and [#49](https://github.com/DLR-RM/stable-baselines3/issues/49) for more details.
-
-We also provide detailed logs and reports on the [OpenRL Benchmark](https://wandb.ai/openrlbenchmark/sb3) platform.
-
-
-| **Features**                | **Stable-Baselines3** |
-| --------------------------- | ----------------------|
-| State of the art RL methods | :heavy_check_mark: |
-| Documentation               | :heavy_check_mark: |
-| Custom environments         | :heavy_check_mark: |
-| Custom policies             | :heavy_check_mark: |
-| Common interface            | :heavy_check_mark: |
-| `Dict` observation space support  | :heavy_check_mark: |
-| Ipython / Notebook friendly | :heavy_check_mark: |
-| Tensorboard support         | :heavy_check_mark: |
-| PEP8 code style             | :heavy_check_mark: |
-| Custom callback             | :heavy_check_mark: |
-| High code coverage          | :heavy_check_mark: |
-| Type hints                  | :heavy_check_mark: |
-
-
-### Planned features
-
-Since most of the features from the [original roadmap](https://github.com/DLR-RM/stable-baselines3/issues/1) have been implemented, there are no major changes planned for SB3, it is now *stable*.
-If you want to contribute, you can search in the issues for the ones where [help is welcomed](https://github.com/DLR-RM/stable-baselines3/labels/help%20wanted) and the other [proposed enhancements](https://github.com/DLR-RM/stable-baselines3/labels/enhancement).
-
-While SB3 development is now focused on bug fixes and maintenance (doc update, user experience, ...), there is more active development going on in the associated repositories:
-- newer algorithms are regularly added to the [SB3 Contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib) repository
-- faster variants are developed in the [SBX (SB3 + Jax)](https://github.com/araffin/sbx) repository
-- the training framework for SB3, the RL Zoo, has an active [roadmap](https://github.com/DLR-RM/rl-baselines3-zoo/issues/299)
-
-## Migration guide: from Stable-Baselines (SB2) to Stable-Baselines3 (SB3)
-
-A migration guide from SB2 to SB3 can be found in the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/migration.html).
-
-## Documentation
-
-Documentation is available online: [https://stable-baselines3.readthedocs.io/](https://stable-baselines3.readthedocs.io/)
-
-## Integrations
-
-Stable-Baselines3 has some integration with other libraries/services like Weights & Biases for experiment tracking or Hugging Face for storing/sharing trained models. You can find out more in the [dedicated section](https://stable-baselines3.readthedocs.io/en/master/guide/integrations.html) of the documentation.
-
-
-## RL Baselines3 Zoo: A Training Framework for Stable Baselines3 Reinforcement Learning Agents
-
-[RL Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo) is a training framework for Reinforcement Learning (RL).
-
-It provides scripts for training, evaluating agents, tuning hyperparameters, plotting results and recording videos.
-
-In addition, it includes a collection of tuned hyperparameters for common environments and RL algorithms, and agents trained with those settings.
-
-Goals of this repository:
-
-1. Provide a simple interface to train and enjoy RL agents
-2. Benchmark the different Reinforcement Learning algorithms
-3. Provide tuned hyperparameters for each environment and RL algorithm
-4. Have fun with the trained agents!
-
-Github repo: https://github.com/DLR-RM/rl-baselines3-zoo
-
-Documentation: https://rl-baselines3-zoo.readthedocs.io/en/master/
-
-## SB3-Contrib: Experimental RL Features
-
-We implement experimental features in a separate contrib repository: [SB3-Contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib)
-
-This allows SB3 to maintain a stable and compact core, while still providing the latest features, like Recurrent PPO (PPO LSTM), CrossQ, Truncated Quantile Critics (TQC), Quantile Regression DQN (QR-DQN) or PPO with invalid action masking (Maskable PPO).
-
-Documentation is available online: [https://sb3-contrib.readthedocs.io/](https://sb3-contrib.readthedocs.io/)
-
-## Stable-Baselines Jax (SBX)
-
-[Stable Baselines Jax (SBX)](https://github.com/araffin/sbx) is a proof of concept version of Stable-Baselines3 in Jax, with recent algorithms like DroQ or CrossQ.
-
-It provides a minimal number of features compared to SB3 but can be much faster (up to 20x times!): https://twitter.com/araffin2/status/1590714558628253698
-
-
-## Installation
-
-**Note:** Stable-Baselines3 supports PyTorch >= 2.3
-
-### Prerequisites
-Stable Baselines3 requires Python 3.9+.
-
-#### Windows
-
-To install stable-baselines on Windows, please look at the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/install.html#prerequisites).
-
-
-### Install using pip
-Install the Stable Baselines3 package:
-```sh
-pip install 'stable-baselines3[extra]'
+```bash
+cd example/robotic_manipulation
+python run_ppo_training.py
 ```
 
-This includes optional dependencies like Tensorboard, OpenCV or `ale-py` to train on atari games. If you do not need those, you can use:
-```sh
-pip install stable-baselines3
+### 2. Customized Training
+
+To customize training parameters, edit `training_config.py` and then run:
+
+```bash
+python ppo_main.py
 ```
 
-Please read the [documentation](https://stable-baselines3.readthedocs.io/) for more details and alternatives (from source, using docker).
+## Configuration
 
+### Environment Configuration (`ENV_CONFIG`)
 
-## Example
+Key parameters you can adjust in `training_config.py`:
 
-Most of the code in the library tries to follow a sklearn-like syntax for the Reinforcement Learning algorithms.
+- `debug`: Enable debug mode for detailed logging
+- `wbc_observation_enabled`: Enable WBC observations (True/False)
+- `image_size`: Image observation size (default: 224x224)
+- `enable_roll_pitch_control`: Enable roll/pitch control for base
 
-Here is a quick example of how to train and run PPO on a cartpole environment:
+### Training Configuration (`TRAINING_CONFIG`)
+
+- `total_timesteps`: Total training timesteps (default: 100,000)
+- `n_envs`: Number of parallel environments (default: 1 for ROS)
+- `random_seed`: Random seed for reproducibility
+
+### PPO Hyperparameters (`PPO_CONFIG`)
+
+- `learning_rate`: Learning rate (default: 3e-4)
+- `n_steps`: Steps per update (default: 2048)
+- `batch_size`: Batch size (default: 64)
+- `n_epochs`: Epochs per update (default: 10)
+- `gamma`: Discount factor (default: 0.99)
+
+### Environment Flags (`ENV_FLAGS`)
+
+These flags control the behavior of your environment:
+
+- `TEST_DEMO_USE_ACTION_16_DIM`: Use 16-dim joint control (False = 6-dim position control)
+- `USE_CMD_VEL`: Use velocity control
+- `LEARN_TARGET_EEF_POSE_TARGET`: Learn target end-effector poses
+
+## Training Output
+
+The training will create:
+
+- `ppo_kuavo_logs/` - TensorBoard logs and training metrics
+- `ppo_kuavo_models/` - Saved model checkpoints and final model
+
+### Monitoring Training
+
+To monitor training progress with TensorBoard:
+
+```bash
+tensorboard --logdir ppo_kuavo_logs
+```
+
+Then open your browser to `http://localhost:6006`
+
+## Usage Examples
+
+### Example 1: Quick Training with Default Settings
+
 ```python
-import gymnasium as gym
+from ppo_main import train_ppo, test_model
 
-from stable_baselines3 import PPO
+# Train the model
+model, env = train_ppo()
 
-env = gym.make("CartPole-v1", render_mode="human")
-
-model = PPO("MlpPolicy", env, verbose=1)
-model.learn(total_timesteps=10_000)
-
-vec_env = model.get_env()
-obs = vec_env.reset()
-for i in range(1000):
-    action, _states = model.predict(obs, deterministic=True)
-    obs, reward, done, info = vec_env.step(action)
-    vec_env.render()
-    # VecEnv resets automatically
-    # if done:
-    #   obs = env.reset()
-
-env.close()
+# Test the trained model
+test_model(model, env, n_episodes=3)
 ```
 
-Or just train a model with a one liner if [the environment is registered in Gymnasium](https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/#registering-envs) and if [the policy is registered](https://stable-baselines3.readthedocs.io/en/master/guide/custom_policy.html):
+### Example 2: Custom Environment Configuration
+
+```python
+from training_config import ENV_CONFIG
+from ppo_main import create_vec_env, train_ppo
+
+# Modify environment config
+ENV_CONFIG["debug"] = True
+ENV_CONFIG["wbc_observation_enabled"] = True
+
+# Create environment and train
+env = create_vec_env(n_envs=1, debug=True)
+model, env = train_ppo()
+```
+
+### Example 3: Load and Test a Trained Model
 
 ```python
 from stable_baselines3 import PPO
+from ppo_main import create_vec_env, test_model
 
-model = PPO("MlpPolicy", "CartPole-v1").learn(10_000)
+# Load trained model
+model = PPO.load("ppo_kuavo_models/ppo_kuavo_final")
+
+# Create environment
+env = create_vec_env()
+
+# Test the model
+test_model(model, env, n_episodes=5)
 ```
 
-Please read the [documentation](https://stable-baselines3.readthedocs.io/) for more examples.
+## Important Notes
 
+### ROS Environment Considerations
 
-## Try it online with Colab Notebooks !
+1. **Single Environment**: ROS environments work best with `n_envs=1` due to node conflicts
+2. **Node Initialization**: The environment handles ROS node initialization automatically
+3. **Resource Management**: Ensure proper cleanup with `env.close()`
 
-All the following examples can be executed online using Google Colab notebooks:
+### Training Tips
 
-- [Full Tutorial](https://github.com/araffin/rl-tutorial-jnrr19)
-- [All Notebooks](https://github.com/Stable-Baselines-Team/rl-colab-notebooks/tree/sb3)
-- [Getting Started](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/stable_baselines_getting_started.ipynb)
-- [Training, Saving, Loading](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/saving_loading_dqn.ipynb)
-- [Multiprocessing](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/multiprocessing_rl.ipynb)
-- [Monitor Training and Plotting](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/monitor_training.ipynb)
-- [Atari Games](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/atari_games.ipynb)
-- [RL Baselines Zoo](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/rl-baselines-zoo.ipynb)
-- [PyBullet](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/pybullet.ipynb)
+1. **Start Small**: Begin with fewer timesteps (e.g., 10,000) to test your setup
+2. **Monitor Logs**: Use TensorBoard to monitor training progress
+3. **Checkpoint Regularly**: Models are saved every 10,000 steps by default
+4. **Debug Mode**: Enable debug mode to see detailed environment information
 
+### Common Issues
 
-## Implemented Algorithms
+1. **ROS Node Conflicts**: If you get ROS node errors, ensure only one environment instance
+2. **Memory Issues**: Reduce batch size or number of environments if you run out of memory
+3. **Training Instability**: Try reducing learning rate or increasing entropy coefficient
 
-| **Name**         | **Recurrent**      | `Box`          | `Discrete`     | `MultiDiscrete` | `MultiBinary`  | **Multi Processing**              |
-| ------------------- | ------------------ | ------------------ | ------------------ | ------------------- | ------------------ | --------------------------------- |
-| ARS<sup>[1](#f1)</sup>   | :x: | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :heavy_check_mark: |
-| A2C   | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| CrossQ<sup>[1](#f1)</sup>   | :x: | :heavy_check_mark: | :x:                | :x:                 | :x:                | :heavy_check_mark: |
-| DDPG  | :x: | :heavy_check_mark: | :x:                | :x:                 | :x:                | :heavy_check_mark: |
-| DQN   | :x: | :x: | :heavy_check_mark: | :x:                 | :x:                | :heavy_check_mark: |
-| HER   | :x: | :heavy_check_mark: | :heavy_check_mark: | :x: | :x: | :heavy_check_mark: |
-| PPO   | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |
-| QR-DQN<sup>[1](#f1)</sup>  | :x: | :x: | :heavy_check_mark: | :x:                 | :x:                | :heavy_check_mark: |
-| RecurrentPPO<sup>[1](#f1)</sup>   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |
-| SAC   | :x: | :heavy_check_mark: | :x:                | :x:                 | :x:                | :heavy_check_mark: |
-| TD3   | :x: | :heavy_check_mark: | :x:                | :x:                 | :x:                | :heavy_check_mark: |
-| TQC<sup>[1](#f1)</sup>   | :x: | :heavy_check_mark: | :x:                | :x:                 | :x: | :heavy_check_mark: |
-| TRPO<sup>[1](#f1)</sup>  | :x: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |
-| Maskable PPO<sup>[1](#f1)</sup>   | :x: | :x: | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark:  |
+## Environment Details
 
-<b id="f1">1</b>: Implemented in [SB3 Contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib) GitHub repository.
+Your `RLKuavoGymEnv` provides:
 
-Actions `gymnasium.spaces`:
- * `Box`: A N-dimensional box that contains every point in the action space.
- * `Discrete`: A list of possible actions, where each timestep only one of the actions can be used.
- * `MultiDiscrete`: A list of possible actions, where each timestep only one action of each discrete set can be used.
- * `MultiBinary`: A list of possible actions, where each timestep any of the actions can be used in any combination.
+- **Observation Space**: Dict with pixels, agent_pos, and environment_state
+- **Action Space**: Box with normalized actions [-1, 1]
+- **Reward**: Based on end-effector position or joint angle targets
+- **Termination**: Episode timeout or task completion
 
+The environment supports both:
+- **Position Control**: 6-dimensional end-effector position control
+- **Joint Control**: 16-dimensional joint angle control
 
+## Next Steps
 
-## Testing the installation
-### Install dependencies
-```sh
-pip install -e .[docs,tests,extra]
-```
-### Run tests
-All unit tests in stable baselines3 can be run using `pytest` runner:
-```sh
-make pytest
-```
-To run a single test file:
-```sh
-python3 -m pytest -v tests/test_env_checker.py
-```
-To run a single test:
-```sh
-python3 -m pytest -v -k 'test_check_env_dict_action'
-```
-
-You can also do a static type check using `mypy`:
-```sh
-pip install mypy
-make type
-```
-
-Codestyle check with `ruff`:
-```sh
-pip install ruff
-make lint
-```
-
-## Projects Using Stable-Baselines3
-
-We try to maintain a list of projects using stable-baselines3 in the [documentation](https://stable-baselines3.readthedocs.io/en/master/misc/projects.html),
-please tell us if you want your project to appear on this page ;)
-
-## Citing the Project
-
-To cite this repository in publications:
-
-```bibtex
-@article{stable-baselines3,
-  author  = {Antonin Raffin and Ashley Hill and Adam Gleave and Anssi Kanervisto and Maximilian Ernestus and Noah Dormann},
-  title   = {Stable-Baselines3: Reliable Reinforcement Learning Implementations},
-  journal = {Journal of Machine Learning Research},
-  year    = {2021},
-  volume  = {22},
-  number  = {268},
-  pages   = {1-8},
-  url     = {http://jmlr.org/papers/v22/20-1364.html}
-}
-```
-
-Note: If you need to refer to a specific version of SB3, you can also use the [Zenodo DOI](https://doi.org/10.5281/zenodo.8123988).
-
-## Maintainers
-
-Stable-Baselines3 is currently maintained by [Ashley Hill](https://github.com/hill-a) (aka @hill-a), [Antonin Raffin](https://araffin.github.io/) (aka [@araffin](https://github.com/araffin)), [Maximilian Ernestus](https://github.com/ernestum) (aka @ernestum), [Adam Gleave](https://github.com/adamgleave) (@AdamGleave), [Anssi Kanervisto](https://github.com/Miffyli) (@Miffyli) and [Quentin Gallouédec](https://gallouedec.com/) (@qgallouedec).
-
-**Important Note: We do not provide technical support, or consulting** and do not answer personal questions via email.
-Please post your question on the [RL Discord](https://discord.com/invite/xhfNqQv), [Reddit](https://www.reddit.com/r/reinforcementlearning/), or [Stack Overflow](https://stackoverflow.com/) in that case.
-
-
-## How To Contribute
-
-To any interested in making the baselines better, there is still some documentation that needs to be done.
-If you want to contribute, please read [**CONTRIBUTING.md**](./CONTRIBUTING.md) guide first.
-
-## Acknowledgments
-
-The initial work to develop Stable Baselines3 was partially funded by the project *Reduced Complexity Models* from the *Helmholtz-Gemeinschaft Deutscher Forschungszentren*, and by the EU's Horizon 2020 Research and Innovation Programme under grant number 951992 ([VeriDream](https://www.veridream.eu/)).
-
-The original version, Stable Baselines, was created in the [robotics lab U2IS](http://u2is.ensta-paristech.fr/index.php?lang=en) ([INRIA Flowers](https://flowers.inria.fr/) team) at [ENSTA ParisTech](http://www.ensta-paristech.fr/en).
-
-
-Logo credits: [L.M. Tenkes](https://www.instagram.com/lucillehue/)
+1. **Experiment with Parameters**: Try different hyperparameters in `training_config.py`
+2. **Add Custom Callbacks**: Implement custom callbacks for specific monitoring needs
+3. **Extend Environment**: Add more complex tasks or observations to your environment
+4. **Multi-Environment Training**: Experiment with multiple environments if ROS setup allows

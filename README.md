@@ -29,6 +29,11 @@ To customize training parameters, edit `training_config.py` and then run:
 python ppo_main.py
 ```
 
+### 3. eval
+To eval your ppo policy
+```bash
+python3 test_trained_model.py --model /home/lab/stable-baselines3/example/robotic_manipulation/ppo_kuavo_models/ppo_kuavo_final
+```
 ## Configuration
 
 ### Environment Configuration (`ENV_CONFIG`)

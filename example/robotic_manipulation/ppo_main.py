@@ -183,7 +183,7 @@ def test_model(model, env, n_episodes: int = None):
         print(f"\n--- Episode {episode + 1}/{n_episodes} ---")
         
         obs = env.reset()
-        episode_reward = 0
+        episode_reward = 0.0  # Initialize as float
         step_count = 0
         
         while step_count < max_steps:
@@ -192,6 +192,14 @@ def test_model(model, env, n_episodes: int = None):
             
             # Take step in environment
             obs, reward, done, info = env.step(action)
+            
+            # Handle vectorized environment - extract scalar values
+            if isinstance(reward, np.ndarray):
+                reward = reward[0]  # Take first environment's reward
+            if isinstance(done, np.ndarray):
+                done = done[0]  # Take first environment's done flag
+            if isinstance(info, list):
+                info = info[0]  # Take first environment's info
             
             episode_reward += reward
             step_count += 1

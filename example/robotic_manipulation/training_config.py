@@ -20,7 +20,7 @@ ENV_CONFIG = {
 
 # Training Configuration
 TRAINING_CONFIG = {
-    "total_timesteps": 100_000,       # Total training timesteps
+    "total_timesteps": 1000000,       # Total training timesteps - 1M 
     "n_envs": 1,                      # Number of parallel environments
     "random_seed": 42,                # Random seed for reproducibility
 }
@@ -28,8 +28,8 @@ TRAINING_CONFIG = {
 # PPO Hyperparameters
 PPO_CONFIG = {
     "learning_rate": 3e-4,            # Learning rate
-    "n_steps": 2048,                  # Number of steps per update
-    "batch_size": 64,                 # Batch size
+    "n_steps": 2000,                  # Number of steps per update
+    "batch_size": 256,                 # Batch size
     "n_epochs": 10,                   # Number of epochs per update
     "gamma": 0.99,                    # Discount factor
     "gae_lambda": 0.95,               # GAE lambda parameter
